@@ -21,18 +21,20 @@ impl super::BuildConfig {
         .define("ENABLE_TESTING", "OFF")
         .build_target("lib");
 
-        if ::std::env::var("TARGET").map(|s| s == "i686-linux-android") == Ok(true) {
-            cmk.define("TOOLCHAIN_PREFIX", "i686-linux-android")
-                .target("i686-linux-android26");
-        }
-        if ::std::env::var("TARGET").map(|s| s == "armv7-linux-androideabi") == Ok(true) {
-            cmk.define("TOOLCHAIN_PREFIX", "arm-linux-androideabi")
-                .target("armv7a-linux-androideabi26");
-        }
-        if ::std::env::var("TARGET").map(|s| s == "aarch64-linux-android") == Ok(true) {
-            cmk.define("TOOLCHAIN_PREFIX", "aarch64-linux-android")
-                .target("aarch64-linux-android26");
-        }
+        match ::std::env::var("TARGET").unwrap_or("".to_owned()).as_str() {
+            "i686-linux-android" => {
+                cmk.define("TOOLCHAIN_PREFIX", "i686-linux-android")
+                    .target("i686-linux-android26");
+            }
+            "armv7-linux-androideabi" => {
+                cmk.define("TOOLCHAIN_PREFIX", "arm-linux-androideabi")
+                    .target("armv7a-linux-androideabi26");
+            }
+            "aarch64-linux-android" => {
+                cmk.define("TOOLCHAIN_PREFIX", "aarch64-linux-android")
+                    .target("aarch64-linux-android26");
+            }
+        };
 
         let target_vendor = ::std::env::var("CARGO_CFG_TARGET_VENDOR")
             .expect("CARGO_CFG_TARGET_VENDOR is set by cargo.");

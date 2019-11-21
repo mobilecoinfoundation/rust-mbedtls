@@ -6,7 +6,7 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
-// FIXME: Have to deny warnings to get around the bindgen issues.
+// FIXME: Have to allow warnings to get around the bindgen issues.
 // #![deny(warnings)]
 #![allow(clippy::all)]
 #![cfg_attr(feature = "rdrand", feature(asm))]
