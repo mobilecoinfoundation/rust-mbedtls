@@ -34,6 +34,7 @@ impl super::BuildConfig {
                 cmk.define("TOOLCHAIN_PREFIX", "aarch64-linux-android")
                     .target("aarch64-linux-android26");
             }
+            _ => {}
         };
 
         let target_vendor = ::std::env::var("CARGO_CFG_TARGET_VENDOR")
