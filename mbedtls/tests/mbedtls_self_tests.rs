@@ -62,8 +62,8 @@ tests! {
     fn entropy,
     fn gcm,
     fn hmac_drbg,
-    fn md2,
-    fn md4,
+//    fn md2,
+//    fn md4,
     fn md5,
     fn mpi,
     fn pkcs5,
@@ -84,6 +84,6 @@ fn ec_self_tests() {
     enable_self_test();
     unsafe {
         assert!(mbedtls::self_test::ecp(1) == 0);
-        assert!(mbedtls::self_test::ecjpake(1) == 0);
+        //        assert!(mbedtls::self_test::ecjpake(1) == 0);
     }
 }
