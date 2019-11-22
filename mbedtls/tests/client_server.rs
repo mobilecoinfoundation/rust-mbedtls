@@ -10,7 +10,7 @@
 
 extern crate mbedtls;
 
-use std::io::{Read, Write};
+use genio::{Read, Write};
 use std::net::TcpStream;
 
 use mbedtls::pk::Pk;
@@ -29,7 +29,8 @@ fn client(
     mut conn: TcpStream,
     min_version: Version,
     max_version: Version,
-    exp_version: Option<Version>) -> TlsResult<()> {
+    exp_version: Option<Version>,
+) -> TlsResult<()> {
     let mut entropy = entropy_new();
     let mut rng = CtrDrbg::new(&mut entropy, None)?;
     let mut cacert = Certificate::from_pem(keys::ROOT_CA_CERT)?;
@@ -42,7 +43,7 @@ fn client(
             &mut |crt: &mut LinkedCertificate, depth, verify_flags: &mut VerifyError| {
                 verify_args = Some((crt.subject().unwrap(), depth, *verify_flags));
                 verify_flags.remove(VerifyError::CERT_EXPIRED); //we check the flags at the end,
-                //so removing this flag here prevents the connections from failing with VerifyError
+                                                                //so removing this flag here prevents the connections from failing with VerifyError
                 Ok(())
             };
         let mut config = Config::new(Endpoint::Client, Transport::Stream, Preset::Default);
@@ -62,8 +63,8 @@ fn client(
             }
             Err(e) => {
                 match e {
-                    Error::SslBadHsProtocolVersion => {assert!(exp_version.is_none())},
-                    Error::SslFatalAlertMessage => {},
+                    Error::SslBadHsProtocolVersion => assert!(exp_version.is_none()),
+                    Error::SslFatalAlertMessage => {}
                     e => panic!("Unexpected error {}", e),
                 };
                 return Ok(());
@@ -78,7 +79,10 @@ fn client(
         session.read_exact(&mut buf).unwrap();
         assert_eq!(&buf, format!("Server2Client {:4x}", ciphersuite).as_bytes());
     } // drop verify_callback, releasing borrow of verify_args
-    assert_eq!(verify_args, Some((keys::EXPIRED_CERT_SUBJECT.to_owned(), 0, expected_flags)));
+    assert_eq!(
+        verify_args,
+        Some((keys::EXPIRED_CERT_SUBJECT.to_owned(), 0, expected_flags))
+    );
     Ok(())
 }
 
@@ -108,8 +112,8 @@ fn server(
         Err(e) => {
             match e {
                 // client just closes connection instead of sending alert
-                Error::NetSendFailed => {assert!(exp_version.is_none())},
-                Error::SslBadHsProtocolVersion => {},
+                Error::NetSendFailed => assert!(exp_version.is_none()),
+                Error::SslBadHsProtocolVersion => {}
                 e => panic!("Unexpected error {}", e),
             };
             return Ok(());
@@ -135,7 +139,7 @@ mod test {
     fn client_server_test() {
         use mbedtls::ssl::Version;
 
-        #[derive(Copy,Clone)]
+        #[derive(Copy, Clone)]
         struct TestConfig {
             min_c: Version,
             max_c: Version,
@@ -145,20 +149,80 @@ mod test {
         }
 
         impl TestConfig {
-            pub fn new(min_c: Version, max_c: Version, min_s: Version, max_s: Version, exp_ver: Option<Version>) -> Self {
-                TestConfig { min_c, max_c, min_s, max_s, exp_ver }
+            pub fn new(
+                min_c: Version,
+                max_c: Version,
+                min_s: Version,
+                max_s: Version,
+                exp_ver: Option<Version>,
+            ) -> Self {
+                TestConfig {
+                    min_c,
+                    max_c,
+                    min_s,
+                    max_s,
+                    exp_ver,
+                }
             }
         }
 
         let test_configs = [
-            TestConfig::new(Version::Ssl3, Version::Ssl3, Version::Ssl3, Version::Ssl3, Some(Version::Ssl3)),
-            TestConfig::new(Version::Ssl3, Version::Tls1_2, Version::Ssl3, Version::Ssl3, Some(Version::Ssl3)),
-            TestConfig::new(Version::Tls1_0, Version::Tls1_0, Version::Tls1_0, Version::Tls1_0, Some(Version::Tls1_0)),
-            TestConfig::new(Version::Tls1_1, Version::Tls1_1, Version::Tls1_1, Version::Tls1_1, Some(Version::Tls1_1)),
-            TestConfig::new(Version::Tls1_2, Version::Tls1_2, Version::Tls1_2, Version::Tls1_2, Some(Version::Tls1_2)),
-            TestConfig::new(Version::Tls1_0, Version::Tls1_2, Version::Tls1_0, Version::Tls1_2, Some(Version::Tls1_2)),
-            TestConfig::new(Version::Tls1_2, Version::Tls1_2, Version::Tls1_0, Version::Tls1_2, Some(Version::Tls1_2)),
-            TestConfig::new(Version::Tls1_0, Version::Tls1_1, Version::Tls1_2, Version::Tls1_2, None)
+            TestConfig::new(
+                Version::Ssl3,
+                Version::Ssl3,
+                Version::Ssl3,
+                Version::Ssl3,
+                Some(Version::Ssl3),
+            ),
+            TestConfig::new(
+                Version::Ssl3,
+                Version::Tls1_2,
+                Version::Ssl3,
+                Version::Ssl3,
+                Some(Version::Ssl3),
+            ),
+            TestConfig::new(
+                Version::Tls1_0,
+                Version::Tls1_0,
+                Version::Tls1_0,
+                Version::Tls1_0,
+                Some(Version::Tls1_0),
+            ),
+            TestConfig::new(
+                Version::Tls1_1,
+                Version::Tls1_1,
+                Version::Tls1_1,
+                Version::Tls1_1,
+                Some(Version::Tls1_1),
+            ),
+            TestConfig::new(
+                Version::Tls1_2,
+                Version::Tls1_2,
+                Version::Tls1_2,
+                Version::Tls1_2,
+                Some(Version::Tls1_2),
+            ),
+            TestConfig::new(
+                Version::Tls1_0,
+                Version::Tls1_2,
+                Version::Tls1_0,
+                Version::Tls1_2,
+                Some(Version::Tls1_2),
+            ),
+            TestConfig::new(
+                Version::Tls1_2,
+                Version::Tls1_2,
+                Version::Tls1_0,
+                Version::Tls1_2,
+                Some(Version::Tls1_2),
+            ),
+            TestConfig::new(
+                Version::Tls1_0,
+                Version::Tls1_1,
+                Version::Tls1_2,
+                Version::Tls1_2,
+                None,
+            ),
         ];
 
         for config in &test_configs {
@@ -168,7 +232,9 @@ mod test {
             let max_s = config.max_s;
             let exp_ver = config.exp_ver;
 
-            if (max_c < Version::Tls1_2 || max_s < Version::Tls1_2) && !cfg!(feature = "legacy_protocols") {
+            if (max_c < Version::Tls1_2 || max_s < Version::Tls1_2)
+                && !cfg!(feature = "legacy_protocols")
+            {
                 continue;
             }
 
