@@ -38,7 +38,7 @@ path = "../mbedtls-sys"
 
 [dev-dependencies]
 libc = "0.2.0"
-rand = "0.4"
+rand = "0.7"
 serde_cbor = "0.6"
 hex = "0.3"
 
@@ -67,23 +67,20 @@ legacy_protocols = ["mbedtls-sys-auto/legacy_protocols"]
 pkcs12 = ["std", "yasna"]
 pkcs12_rc2 = ["pkcs12", "rc2", "block-modes"]
 
-build_examples = []
-build_io_tests = []
-
 [[example]]
 name = "client"
 path = "examples/client.rs"
-required-features = ["std", "build_examples"]
+required-features = ["std"]
 
 [[example]]
 name = "server"
 path = "examples/server.rs"
-required-features = ["std", "build_examples"]
+required-features = ["std"]
 
 [[test]]
 name = "client_server"
 path = "tests/client_server.rs"
-required-features = ["std", "build_io_tests"]
+required-features = ["std"]
 
 [[test]]
 name = "ec"
@@ -112,4 +109,4 @@ path = "tests/save_restore.rs"
 [[test]]
 name = "ssl_conf_verify"
 path = "tests/ssl_conf_verify.rs"
-required-features = ["std", "build_io_tests"]
+required-features = ["std"]
