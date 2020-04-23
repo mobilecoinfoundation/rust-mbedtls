@@ -123,7 +123,7 @@ const CUSTOM_PK_INFO: pk_info_t = {
         sign_func: None,
         verify_func: None,
         get_bitlen: None,
-        name: b"\0" as *const u8 as *const i8,
+        name: b"\0" as *const u8 as *const mbedtls_sys::types::raw_types::c_char,
         ctx_alloc_func: Some(alloc_custom_pk_ctx),
         ctx_free_func: Some(free_custom_pk_ctx),
     }
