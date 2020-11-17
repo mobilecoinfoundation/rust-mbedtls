@@ -35,8 +35,13 @@ pub use self::ec::{EcGroupId, ECDSA_MAX_LEN};
 #[doc(inline)]
 pub use crate::ecp::EcGroup;
 
-// SHA-256("Fortanix")[:4]
-const CUSTOM_PK_TYPE: pk_type_t = 0x8b205408 as pk_type_t;
+// Originally SHA-256("Fortanix")[:4], changed to zero-prefixed [:3] because
+// [C enums are signed](https://docs.microsoft.com/en-us/cpp/c-language/c-enumeration-declarations),
+// unless there's a value which makes them unsigned.
+//
+// This seems to force the underlying mbedtls_pk_type_t to be unsigned on Linux
+// (nightly-2020-07-01), but does not on Windows (stable-1.47.0).
+const CUSTOM_PK_TYPE: pk_type_t = 0x008b2054 as pk_type_t;
 
 define!(
     #[c_ty(pk_type_t)]
@@ -108,7 +113,7 @@ unsafe extern "C" fn free_custom_pk_ctx(p: *mut c_void) {
     Box::from_raw(p as *mut CustomPkContext);
 }
 
-extern "C" fn custom_pk_can_do(_t: u32) -> i32 {
+extern "C" fn custom_pk_can_do(_t: pk_type_t) -> i32 {
     0
 }
 

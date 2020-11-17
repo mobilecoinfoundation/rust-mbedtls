@@ -73,6 +73,18 @@ impl super::BuildConfig {
             "cargo:rustc-link-search=native={}",
             dst.to_str().expect("link-search UTF-8 error")
         );
+        // Add both Debug and Release here, because only one will actually be present, since cargo
+        // puts all this under target/debug or target/release.
+        let profile = dst.join("Debug");
+        println!(
+            "cargo:rustc-link-search=native={}",
+            profile.to_str().expect("link-search UTF-8 error")
+        );
+        let profile = dst.join("Release");
+        println!(
+            "cargo:rustc-link-search=native={}",
+            profile.to_str().expect("link-search UTF-8 error")
+        );
 
         let mut dst = cmk.build();
         dst.push("build");
@@ -81,6 +93,17 @@ impl super::BuildConfig {
         println!(
             "cargo:rustc-link-search=native={}",
             dst.to_str().expect("link-search UTF-8 error")
+        );
+
+        let profile = dst.join("Debug");
+        println!(
+            "cargo:rustc-link-search=native={}",
+            profile.to_str().expect("link-search UTF-8 error")
+        );
+        let profile = dst.join("Release");
+        println!(
+            "cargo:rustc-link-search=native={}",
+            profile.to_str().expect("link-search UTF-8 error")
         );
 
         println!("cargo:rustc-link-lib=mbedtls");

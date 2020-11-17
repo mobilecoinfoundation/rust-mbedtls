@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 extern void mbedtls_log(const char* msg);
 
@@ -22,7 +23,9 @@ extern int mbedtls_printf(const char *fmt, ...) {
        return -1;
 
     n++;
-    char p[n];
+    char *p = alloca(n);
+    if (p==NULL)
+        return -1;
 
     va_start(ap,fmt);
     n=vsnprintf(p,n,fmt,ap);
