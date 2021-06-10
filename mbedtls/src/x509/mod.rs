@@ -122,12 +122,12 @@ impl VerifyError {
 /// A specific moment in time in UTC
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct Time {
-    year: u16,
-    month: u8,
-    day: u8,
-    hour: u8,
-    minute: u8,
-    second: u8,
+    pub year: u16,
+    pub month: u8,
+    pub day: u8,
+    pub hour: u8,
+    pub minute: u8,
+    pub second: u8,
 }
 
 use core::fmt::{self, Write as FmtWrite};
