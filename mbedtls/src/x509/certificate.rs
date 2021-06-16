@@ -21,7 +21,8 @@ use crate::hash::Type as MdType;
 use crate::pk::Pk;
 use crate::private::UnsafeFrom;
 use crate::rng::Random;
-use crate::x509::Time;
+use crate::x509::{Crl, Profile, Time};
+
 
 extern "C" {
     pub(crate) fn forward_mbedtls_calloc(n: mbedtls_sys::types::size_t, size: mbedtls_sys::types::size_t) -> *mut mbedtls_sys::types::raw_types::c_void;
@@ -221,17 +222,29 @@ impl Certificate {
         MdType::from(self.inner.sig_md)
     }
 
+    #[inline]
     pub fn verify(
         chain: &MbedtlsList<Certificate>,
         trust_ca: &MbedtlsList<Certificate>,
         err_info: Option<&mut String>,
     ) -> Result<()> {
+        Certificate::verify_with_profile(chain, trust_ca, None, None, err_info)
+    }
+
+    pub fn verify_with_profile(
+        chain: &MbedtlsList<Certificate>,
+        trust_ca: &MbedtlsList<Certificate>,
+        crl: Option<&mut Crl>,
+        profile: Option<&Profile>,
+        err_info: Option<&mut String>,
+    ) -> Result<()> {
         let mut flags = 0;
         let result = unsafe {
-            x509_crt_verify(
+            x509_crt_verify_with_profile(
                 chain.inner_ffi_mut(),
                 trust_ca.inner_ffi_mut(),
-                ::core::ptr::null_mut(),
+                crl.map_or(::core::ptr::null_mut(), |revlist| revlist.into()),
+                profile.map_or(::core::ptr::null(), |prof| prof.into()),
                 ::core::ptr::null(),
                 &mut flags,
                 None,
