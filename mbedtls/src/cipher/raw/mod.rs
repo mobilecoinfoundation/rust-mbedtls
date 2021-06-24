@@ -10,6 +10,9 @@ use mbedtls_sys::*;
 
 use crate::error::{Error, IntoResult, Result};
 
+// This module contains transmute calls that have a hardcoded number of bytes assuming 64-bit
+// archs. This means it won't build in 32 bit targets.
+#[cfg(buggy)]
 mod serde;
 
 define!(
