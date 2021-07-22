@@ -89,7 +89,7 @@ pub unsafe fn cstr_to_slice<'a>(ptr: *const c_char) -> &'a [u8] {
 }
 
 #[cfg(not(feature = "std"))]
-use core_io::{Error as IoError, ErrorKind as IoErrorKind};
+use genio::{Error as IoError, ErrorKind as IoErrorKind};
 #[cfg(feature = "std")]
 use std::io::{Error as IoError, ErrorKind as IoErrorKind};
 
