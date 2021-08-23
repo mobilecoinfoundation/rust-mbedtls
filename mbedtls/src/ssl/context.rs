@@ -9,10 +9,7 @@
 
 use core::any::Any;
 use core::result::Result as StdResult;
-#[cfg(not(feature = "std"))]
-use genio::{Read, Write, Result as IoResult};
-#[cfg(feature = "std")]
-use std::io::{Read, Write, Result as IoResult};
+use genio::{Read, Write};
 #[cfg(feature = "std")]
 use std::sync::Arc;
 
@@ -261,26 +258,34 @@ impl Drop for Context {
 }
 
 impl Read for Context {
-    fn read(&mut self, buf: &mut [u8]) -> IoResult<usize> {
+    type ReadError = Error;
+
+    fn read(&mut self, buf: &mut [u8]) -> StdResult<usize, Self::ReadError> {
         match unsafe { ssl_read(self.into(), buf.as_mut_ptr(), buf.len()).into_result() } {
             Err(Error::SslPeerCloseNotify) => Ok(0),
-            Err(e) => Err(crate::private::error_to_io_error(e)),
+            Err(e) => Err(e),
             Ok(i) => Ok(i as usize),
         }
     }
 }
 
 impl Write for Context {
-    fn write(&mut self, buf: &[u8]) -> IoResult<usize> {
+    type WriteError = Error;
+    type FlushError = Error;
+
+    fn write(&mut self, buf: &[u8]) -> StdResult<usize, Self::WriteError> {
         match unsafe { ssl_write(self.into(), buf.as_ptr(), buf.len()).into_result() } {
             Err(Error::SslPeerCloseNotify) => Ok(0),
-            Err(e) => Err(crate::private::error_to_io_error(e)),
+            Err(e) => Err(e),
             Ok(i) => Ok(i as usize),
         }
     }
 
-    fn flush(&mut self) -> IoResult<()> {
+    fn flush(&mut self) -> StdResult<(), Self::FlushError> {
         Ok(())
+    }
+
+    fn size_hint(&mut self, _bytes: usize) {
     }
 }
 
