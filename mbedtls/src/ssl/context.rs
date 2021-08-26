@@ -9,10 +9,7 @@
 
 use core::any::Any;
 use core::result::Result as StdResult;
-#[cfg(not(feature = "std"))]
-use core_io::{Read, Write, Result as IoResult};
-#[cfg(feature = "std")]
-use std::io::{Read, Write, Result as IoResult};
+use genio::{Read, Write};
 #[cfg(feature = "std")]
 use std::sync::Arc;
 
@@ -72,14 +69,14 @@ define!(
     #[repr(C)]
     struct Context {
         // config is used read-only for mutliple contexts and is immutable once configured.
-        config: Arc<Config>, 
+        config: Arc<Config>,
 
         // Must be held in heap and pointer to it as pointer is sent to MbedSSL and can't be re-allocated.
         io: Option<Box<dyn Any>>,
-        
+
         handshake_ca_cert: Option<Arc<MbedtlsList<Certificate>>>,
         handshake_crl: Option<Arc<Crl>>,
-        
+
         handshake_cert: Vec<Arc<MbedtlsList<Certificate>>>,
         handshake_pk: Vec<Arc<Pk>>,
     };
@@ -92,7 +89,7 @@ define!(
 impl Context {
     pub fn new(config: Arc<Config>) -> Self {
         let mut inner = ssl_context::default();
-        
+
         unsafe {
             ssl_init(&mut inner);
             ssl_setup(&mut inner, (&*config).into());
@@ -105,7 +102,7 @@ impl Context {
 
             handshake_ca_cert: None,
             handshake_crl: None,
-            
+
             handshake_cert: vec![],
             handshake_pk: vec![],
         }
@@ -132,7 +129,7 @@ impl Context {
             self.handshake_pk.clear();
             self.handshake_ca_cert = None;
             self.handshake_crl = None;
-            
+
             match ssl_handshake(self.into()).into_result() {
                 Err(e) => {
                     // safely end borrow of io
@@ -179,7 +176,7 @@ impl Context {
     pub fn config(&self) -> &Arc<Config> {
         &self.config
     }
-    
+
     pub fn close(&mut self) {
         unsafe {
             ssl_close_notify(self.into());
@@ -194,7 +191,7 @@ impl Context {
     pub fn io_mut(&mut self) -> Option<&mut dyn Any> {
         self.io.as_mut().map(|v| &mut **v)
     }
-    
+
     /// Return the minor number of the negotiated TLS version
     pub fn minor_version(&self) -> i32 {
         self.inner.minor_ver
@@ -226,7 +223,7 @@ impl Context {
 
 
     // Session specific functions
-    
+
     /// Return the 16-bit ciphersuite identifier.
     /// All assigned ciphersuites are listed by the IANA in
     /// https://www.iana.org/assignments/tls-parameters/tls-parameters.txt
@@ -234,7 +231,7 @@ impl Context {
         if self.inner.session.is_null() {
             return Err(Error::SslBadInputData);
         }
-        
+
         Ok(unsafe { self.inner.session.as_ref().unwrap().ciphersuite as u16 })
     }
 
@@ -261,26 +258,34 @@ impl Drop for Context {
 }
 
 impl Read for Context {
-    fn read(&mut self, buf: &mut [u8]) -> IoResult<usize> {
+    type ReadError = Error;
+
+    fn read(&mut self, buf: &mut [u8]) -> StdResult<usize, Self::ReadError> {
         match unsafe { ssl_read(self.into(), buf.as_mut_ptr(), buf.len()).into_result() } {
             Err(Error::SslPeerCloseNotify) => Ok(0),
-            Err(e) => Err(crate::private::error_to_io_error(e)),
+            Err(e) => Err(e),
             Ok(i) => Ok(i as usize),
         }
     }
 }
 
 impl Write for Context {
-    fn write(&mut self, buf: &[u8]) -> IoResult<usize> {
+    type WriteError = Error;
+    type FlushError = Error;
+
+    fn write(&mut self, buf: &[u8]) -> StdResult<usize, Self::WriteError> {
         match unsafe { ssl_write(self.into(), buf.as_ptr(), buf.len()).into_result() } {
             Err(Error::SslPeerCloseNotify) => Ok(0),
-            Err(e) => Err(crate::private::error_to_io_error(e)),
+            Err(e) => Err(e),
             Ok(i) => Ok(i as usize),
         }
     }
 
-    fn flush(&mut self) -> IoResult<()> {
+    fn flush(&mut self) -> StdResult<(), Self::FlushError> {
         Ok(())
+    }
+
+    fn size_hint(&mut self, _bytes: usize) {
     }
 }
 
@@ -306,12 +311,12 @@ impl<'ctx> HandshakeContext<'ctx> {
     pub(crate) fn init(context: &'ctx mut Context) -> Self {
         HandshakeContext { context }
     }
-    
+
     pub fn set_authmode(&mut self, am: AuthMode) -> Result<()> {
         if self.context.inner.handshake as *const _ == ::core::ptr::null() {
             return Err(Error::SslBadInputData);
         }
-        
+
         unsafe { ssl_set_hs_authmode(self.context.into(), am as i32) }
         Ok(())
     }
