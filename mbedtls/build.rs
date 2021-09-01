@@ -32,6 +32,7 @@ fn main() {
             .define("_FORTIFY_SOURCE", Some("0"))
             .flag("-ffreestanding");
     }
+    b.flag("-fvisibility=hidden");
     b.compile("librust-mbedtls.a");
     // Force correct link order for mbedtls_printf
     println!("cargo:rustc-link-lib=static=mbedtls");
