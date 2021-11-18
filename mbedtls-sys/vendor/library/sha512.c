@@ -404,7 +404,7 @@ void mbedtls_sha512_update( mbedtls_sha512_context *ctx,
  * SHA-512 final digest
  */
 int mbedtls_sha512_finish_ret( mbedtls_sha512_context *ctx,
-                               unsigned char output[64] )
+                               unsigned char *output )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned used;
@@ -485,7 +485,7 @@ void mbedtls_sha512_finish( mbedtls_sha512_context *ctx,
  */
 int mbedtls_sha512_ret( const unsigned char *input,
                     size_t ilen,
-                    unsigned char output[64],
+                    unsigned char *output,
                     int is384 )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
