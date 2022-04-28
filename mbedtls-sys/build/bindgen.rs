@@ -11,6 +11,7 @@ use bindgen;
 use std::fmt::Write as _;
 use std::fs::{self, File};
 use std::io::Write;
+use std::env;
 
 use crate::headers;
 
@@ -88,6 +89,7 @@ impl super::BuildConfig {
         }
 
         let mut cc = cc::Build::new();
+
         cc.include(&self.mbedtls_include)
         .flag(&format!(
             "-DMBEDTLS_CONFIG_FILE=\"{}\"",
@@ -114,6 +116,15 @@ impl super::BuildConfig {
                 }
                 _ => {} // skip toolchains without a configured sysroot
             };
+        }
+
+        // Bindgen utilizes libclang and the current `TARGET` to parse the C files.
+        // When the `TARGET` is custom, we need to override it so that bindgen
+        // finds the right stdlib headers.
+        // See https://docs.rust-embedded.org/embedonomicon/custom-target.html
+        // for more details.
+        if let Some(target) = env::var_os("RUST_MBEDTLS_BINDGEN_TARGET") {
+            env::set_var("TARGET", target);
         }
 
         let bindings = bindgen::builder()

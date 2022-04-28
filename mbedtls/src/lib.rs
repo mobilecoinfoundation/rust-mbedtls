@@ -21,7 +21,7 @@ extern crate bitflags;
 #[macro_use]
 extern crate serde_derive;
 // required explicitly to force inclusion at link time
-#[cfg(target_env = "sgx")]
+#[cfg(all(target_vendor = "fortanix", target_env = "sgx"))]
 extern crate rs_libc;
 
 #[macro_use]
