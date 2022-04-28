@@ -118,6 +118,13 @@ impl super::BuildConfig {
             };
         }
 
+        // In order to support being used in crates that utilize custom
+        // targets,
+        // https://docs.rust-embedded.org/embedonomicon/custom-target.html
+        // a target override is provided for bindgen usage.  Bindgen utilizes
+        // libclang and the current `TARGET` to parse the C files.  If the
+        // `TARGET` is custom, the C stdlib headers will not exist resulting
+        // in parsing errors.
         if let Some(target) = env::var_os("RUST_MBEDTLS_BINDGEN_TARGET"){
             env::set_var("TARGET", target);
         }
