@@ -8,6 +8,7 @@
 
 #![deny(warnings)]
 #![allow(unused_doc_comments)]
+#![allow(suspicious_auto_trait_impls)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(not(any(feature = "std", feature = "no_std_deps")))]
