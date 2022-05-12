@@ -9,7 +9,8 @@
 use mbedtls_sys::types::raw_types::{c_int, c_uchar, c_void};
 use mbedtls_sys::types::size_t;
 
-use rand::{Rng, XorShiftRng};
+use rand_core::{RngCore, SeedableRng};
+use rand_xorshift::XorShiftRng;
 
 /// Not cryptographically secure!!! Use for testing only!!!
 pub struct TestRandom(XorShiftRng);
@@ -43,5 +44,11 @@ impl crate::mbedtls::rng::RngCallback for TestRandom {
 
 /// Not cryptographically secure!!! Use for testing only!!!
 pub fn test_rng() -> TestRandom {
-    TestRandom(XorShiftRng::new_unseeded())
+    const SEED: [u8; 16] = [
+        0x19, 0x3a, 0x67, 0x54,
+        0xa8, 0xa7, 0xd4, 0x69,
+        0x97, 0x83, 0x0e, 0x05,
+        0x11, 0x3b, 0xa7, 0xbb
+    ];
+    TestRandom(XorShiftRng::from_seed(SEED))
 }
