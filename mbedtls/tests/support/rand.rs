@@ -44,11 +44,25 @@ impl crate::mbedtls::rng::RngCallback for TestRandom {
 
 /// Not cryptographically secure!!! Use for testing only!!!
 pub fn test_rng() -> TestRandom {
-    const SEED: [u8; 16] = [
-        0x19, 0x3a, 0x67, 0x54,
-        0xa8, 0xa7, 0xd4, 0x69,
-        0x97, 0x83, 0x0e, 0x05,
-        0x11, 0x3b, 0xa7, 0xbb
+    const SEED: [u32; 4] = [
+        0x193a6754,
+        0xa8a7d469,
+        0x97830e05,
+        0x113ba7bb,
     ];
-    TestRandom(XorShiftRng::from_seed(SEED))
+
+    let mut seed_bytes = [0u8; 16];
+
+    for (index, value) in SEED.iter().enumerate() {
+        let bytes = value.to_le_bytes();
+        seed_bytes[index * 4..index * 4 + 4].copy_from_slice(&bytes);
+    }
+
+    let mut out_seed = [0u32; 4];
+    rand_core::le::read_u32_into(&seed_bytes, &mut out_seed);
+
+    extern crate std;
+    std::eprintln!("SEED: {:08x?}, seed_bytes: {:02x?}, out_seed: {:08x?}", SEED, seed_bytes, out_seed);
+
+    TestRandom(XorShiftRng::from_seed(seed_bytes))
 }
