@@ -9,6 +9,7 @@
 use mbedtls::cipher;
 use mbedtls::cipher::raw::{CipherId, CipherMode, CipherPadding};
 use mbedtls::cipher::{Cipher, Decryption, Encryption, Fresh, Authenticated, Traditional};
+#[cfg(buggy)]
 use serde_cbor::{de, ser};
 
 const ZERO_16B: &'static [u8] = &[0u8; 16];

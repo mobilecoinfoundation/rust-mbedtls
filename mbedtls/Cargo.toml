@@ -44,7 +44,6 @@ path = "../mbedtls-sys"
 [dev-dependencies]
 libc = "0.2.0"
 rand_core = "0.6.3"
-rand_xorshift = "0.3"
 serde_cbor = "0.6"
 hex = "0.3"
 matches = "0.1.8"
