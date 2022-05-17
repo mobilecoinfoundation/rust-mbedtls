@@ -3,10 +3,11 @@ name: mobilecoin
 
 on:
   pull_request:
-    paths:
-      - "*"
+    branches:
+      - "mc-develop"
   push:
-    branches: mc-develop
+    branches:
+      - "mc-develop"
 
 env:
   CARGO_INCREMENTAL: 0
