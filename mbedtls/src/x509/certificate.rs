@@ -6,7 +6,6 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
-use core::borrow::Borrow;
 use core::fmt;
 use core::iter::FromIterator;
 use core::ptr::NonNull;
@@ -245,7 +244,7 @@ impl Certificate {
                 chain.inner_ffi_mut(),
                 trust_ca.inner_ffi_mut(),
                 crl.map_or(::core::ptr::null_mut(), |revlist| revlist.into()),
-                profile.map_or(profile::DEFAULT.borrow().into(), |prof| prof.into()),
+                profile.map_or(profile::DEFAULT.handle(), |prof| prof.handle()),
                 ::core::ptr::null(),
                 &mut flags,
                 None,
