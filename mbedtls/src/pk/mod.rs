@@ -1039,8 +1039,6 @@ impl Pk {
 
 #[cfg(test)]
 mod tests {
-    extern crate std;
-
     use super::*;
     use crate::hash::Type;
     use crate::pk::Type as PkType;

@@ -1007,8 +1007,6 @@ cYp0bH/RcPTC0Z+ZaqSWMtfxRrk63MJQF9EXpDCdvQRcTMD9D85DJrMKn8aumq0M
 
             let mut err_info = String::default();
             let err = Certificate::verify(&chain, &mut c_root, Some(&mut err_info)).unwrap_err();
-            extern crate std;
-            std::eprintln!("Cert verify error: {}, err = {}", err_info, err);
             assert_eq!(err, Error::X509CertVerifyFailed);
 
             // try again after fixing the chain
@@ -1025,8 +1023,6 @@ cYp0bH/RcPTC0Z+ZaqSWMtfxRrk63MJQF9EXpDCdvQRcTMD9D85DJrMKn8aumq0M
             Certificate::verify(&chain, &mut c_root, None).unwrap();
         }
     }
-
-
 
     #[test]
     fn clone_test() {
