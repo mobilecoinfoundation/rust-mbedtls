@@ -1004,8 +1004,7 @@ cYp0bH/RcPTC0Z+ZaqSWMtfxRrk63MJQF9EXpDCdvQRcTMD9D85DJrMKn8aumq0M
             chain.push(c_leaf.clone());
             chain.push(c_int1.clone());
 
-            let mut err_info = String::default();
-            let err = Certificate::verify(&chain, &mut c_root, Some(&mut err_info)).unwrap_err();
+            let err = Certificate::verify(&chain, &mut c_root, None).unwrap_err();
             assert_eq!(err, Error::X509CertVerifyFailed);
 
             // try again after fixing the chain
