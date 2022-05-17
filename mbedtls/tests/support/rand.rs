@@ -12,13 +12,12 @@ use core::num::Wrapping as w;
 
 /// An Xorshift random number generator.
 ///
-/// The Xorshift[^1] algorithm is not suitable for cryptographic purposes
-/// but is very fast. If you do not know for sure that it fits your
-/// requirements, use a more secure one such as `IsaacRng` or `OsRng`.
+/// This is copied here from `rand` 0.4 because the behavior of
+/// [`XorShiftRng::fill_bytes()`] changed between the latest version and the
+/// default implementations in [`rand::Rng` in 0.4](https://docs.rs/rand/0.4.6/src/rand/lib.rs.html#345-617).
 ///
-/// [^1]: Marsaglia, George (July 2003).
-///       ["Xorshift RNGs"](https://www.jstatsoft.org/v08/i14/paper).
-///       *Journal of Statistical Software*. Vol. 8 (Issue 14).
+/// This is to maintain consistency with the 0.4 version whose output appears in
+/// our unit tests, namely the test for [`pk::mod::generate_rsa()`].
 #[derive(Clone, Debug)]
 struct XorShiftRng {
     x: w<u32>,
