@@ -1,10 +1,11 @@
 
 on:
   pull_request:
+    branches:
+      - mc-develop
   push:
     branches:
-      - "mc-develop"
-  workflow_dispatch:
+      - mc-develop
 
 env:
   RUST_BACKTRACE: full
