@@ -1,0 +1,39 @@
+
+on:
+  pull_request:
+    branches:
+      - mc-develop
+  push:
+    branches:
+      - mc-develop
+
+env:
+  RUST_BACKTRACE: full
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2022-04-29
+          target: x86_64-unknown-linux-gnu
+          override: true
+          profile: minimal
+      - run: sudo apt update && sudo apt install cmake
+      - run: cargo build --target x86_64-unknown-linux-gnu --release --no-default-features --features="no_std_deps,aesni,force_aesni_support,rdrand,custom_threading"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2022-04-29
+          target: x86_64-unknown-linux-gnu
+          override: true
+          profile: minimal
+      - run: sudo apt update && sudo apt install cmake
+      - run: cargo test --target x86_64-unknown-linux-gnu --release --no-default-features --features="no_std_deps,aesni,force_aesni_support,rdrand,custom_threading"

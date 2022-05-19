@@ -24,6 +24,7 @@ extern crate serde_derive;
 // required explicitly to force inclusion at link time
 #[cfg(all(target_vendor = "fortanix", target_env = "sgx"))]
 extern crate rs_libc;
+extern crate core;
 
 #[macro_use]
 mod wrapper_macros;
