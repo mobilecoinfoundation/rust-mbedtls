@@ -23,7 +23,7 @@ genio = { version = "0.2.1", default-features = false }
 spin = { version = "0.9.4", default-features = false, optional = true, features = ["mutex","spin_mutex"] }
 serde = { version = "1.0.7", default-features = false }
 serde_derive = "1.0.7"
-byteorder = { version = "1.0.0", default-features = false }
+byteorder = { version = "1.4.3", default-features = false }
 yasna = { version = "0.2", optional = true, features = ["num-bigint", "bit-vec"] }
 num-bigint = { version = "0.2", optional = true }
 bit-vec = { version = "0.5", optional = true }
