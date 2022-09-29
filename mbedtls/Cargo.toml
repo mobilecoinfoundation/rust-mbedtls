@@ -42,7 +42,7 @@ features = ["custom_printf", "trusted_cert_callback", "threading"]
 path = "../mbedtls-sys"
 
 [dev-dependencies]
-libc = "0.2.126"
+libc = "0.2.134"
 rand_core = "0.6.3"
 serde_cbor = "0.6"
 hex = "0.4"
