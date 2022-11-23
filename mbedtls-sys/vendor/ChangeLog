@@ -9,7 +9,7 @@ Bugfix
 
 = mbed TLS PR #4978
 
-	Bugfix
+Bugfix
    * Fix missing constraints on x86_64 and aarch64 assembly code
      for bignum multiplication that broke some bignum operations with
      (at least) Clang 12.
