@@ -43,7 +43,7 @@ path = "../mbedtls-sys"
 
 [dev-dependencies]
 libc = "0.2.126"
-rand_core = "0.6.3"
+rand_core = "0.6.4"
 serde_cbor = "0.6"
 hex = "0.4"
 matches = "0.1.9"
