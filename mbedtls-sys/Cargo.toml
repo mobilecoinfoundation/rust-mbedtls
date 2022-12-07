@@ -32,7 +32,7 @@ cmake = "0.1.49"
 cc = "1.0.45"
 lazy_static = "1.4"
 syn = { version = "1.0.64", features = ["full", "visit"] }
-quote = "1.0.20"
+quote = "1.0.21"
 
 [features]
 # If you use mbedtls-sys in a no_std configuration, you need to provide your
