@@ -7,7 +7,7 @@
  * according to those terms. */
 
 use mbedtls_sys::*;
-
+use serde::{Deserialize, Serialize};
 use crate::error::{Error, IntoResult, Result};
 
 // This module contains transmute calls that have a hardcoded number of bytes assuming 64-bit
