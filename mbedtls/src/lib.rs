@@ -20,7 +20,7 @@ extern crate alloc as rust_alloc;
 #[macro_use]
 extern crate bitflags;
 #[macro_use]
-extern crate serde_derive;
+extern crate serde;
 // required explicitly to force inclusion at link time
 #[cfg(all(target_vendor = "fortanix", target_env = "sgx"))]
 extern crate rs_libc;
