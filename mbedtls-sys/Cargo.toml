@@ -29,7 +29,7 @@ libc = { version = "0.2.138" }
 [build-dependencies]
 bindgen = "0.60.1"
 cmake = "0.1.49"
-cc = "1.0.77"
+cc = "1.0.78"
 lazy_static = "1.4"
 syn = { version = "1.0.64", features = ["full", "visit"] }
 quote = "1.0.21"
