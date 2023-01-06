@@ -27,7 +27,7 @@ libc = { version = "0.2.138", optional = true }
 libc = { version = "0.2.138" }
 
 [build-dependencies]
-bindgen = "0.60.1"
+bindgen = "0.63.0"
 cmake = "0.1.49"
 cc = "1.0.78"
 lazy_static = "1.4"
