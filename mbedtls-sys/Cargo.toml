@@ -31,7 +31,7 @@ bindgen = "0.63.0"
 cmake = "0.1.49"
 cc = "1.0.78"
 lazy_static = "1.4"
-syn = { version = "1.0.64", features = ["full", "visit"] }
+syn = { version = "1.0.107", features = ["full", "visit"] }
 quote = "1.0.23"
 
 [features]
