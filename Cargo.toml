@@ -1,2 +1,9 @@
 [workspace]
 members = ["mbedtls", "mbedtls-sys"]
+
+[patch.crates-io]
+# Patch of CC 1.0.78 that configures macabi targets correctly
+cc = { git = "https://github.com/mobilecoinofficial/cc-rs.git", rev = "b3d13d7b46a1f813ded4a1976e015143769946c6" }
+
+# Patch of cmake-rs 1.0.49 that configures macabi targets correctly
+cmake = { git = "https://github.com/the-real-adammork/cmake-rs.git", rev = "2b07aa1d59b8b1a6647c27972f9a7f2ed607fc9f" }
