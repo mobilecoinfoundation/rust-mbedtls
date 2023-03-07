@@ -24,7 +24,7 @@ libz-sys = { version = "1.1.8", optional = true }
 libc = { version = "0.2.139", optional = true }
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.138" }
+libc = { version = "0.2.139" }
 
 [build-dependencies]
 bindgen = "0.64.0"
@@ -32,7 +32,7 @@ cmake = "0.1.49"
 cc = "1.0.79"
 lazy_static = "1.4"
 syn = { version = "1.0.109", features = ["full", "visit"] }
-quote = "1.0.9"
+quote = "1.0.23"
 
 [features]
 # If you use mbedtls-sys in a no_std configuration, you need to provide your
