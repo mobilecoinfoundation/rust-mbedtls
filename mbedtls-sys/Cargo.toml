@@ -21,10 +21,10 @@ cfg-if = "1.0.0"
 libz-sys = { version = "1.1.8", optional = true }
 # deprecated dependency, this don't do anything anymore, but still needed to
 # provide the `libc` feature, can be removed on major version bump
-libc = { version = "0.2.139", optional = true }
+libc = { version = "0.2.140", optional = true }
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.138" }
+libc = { version = "0.2.140" }
 
 [build-dependencies]
 bindgen = "0.64.0"
