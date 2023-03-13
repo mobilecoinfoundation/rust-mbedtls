@@ -18,7 +18,7 @@ documentation = "https://docs.rs/mbedtls/"
 keywords = ["MbedTLS","mbed","TLS","SSL","cryptography"]
 
 [dependencies]
-bitflags = "1"
+bitflags = "2"
 genio = { version = "0.2.1", default-features = false }
 spin = { version = "0.9.5", default-features = false, optional = true, features = ["mutex","spin_mutex"] }
 serde = { version = "1.0.154", default-features = false, features = ["derive"] }
