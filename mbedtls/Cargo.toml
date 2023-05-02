@@ -49,7 +49,7 @@ matches = "0.1.10"
 hyper = { version = "0.14.24", default-features = false }
 
 [build-dependencies]
-cc = "1.0.79"
+cc = "1.0.78"
 
 [features]
 # Features are documented in the README
