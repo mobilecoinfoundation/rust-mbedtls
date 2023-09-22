@@ -6,6 +6,7 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
+extern crate alloc;
 
 use core::any::Any;
 use core::result::Result as StdResult;
@@ -144,18 +145,9 @@ impl Context {
         }
     }
 
-    #[cfg(not(feature = "std"))]
-    fn set_hostname(&mut self, hostname: Option<&str>) -> Result<()> {
-        match hostname {
-            Some(_) => Err(Error::SslBadInputData),
-            None => Ok(()),
-        }
-    }
-
-    #[cfg(feature = "std")]
     fn set_hostname(&mut self, hostname: Option<&str>) -> Result<()> {
         if let Some(s) = hostname {
-            let cstr = ::std::ffi::CString::new(s).map_err(|_| Error::SslBadInputData)?;
+            let cstr = alloc::ffi::CString::new(s).map_err(|_| Error::SslBadInputData)?;
             unsafe {
                 ssl_set_hostname(self.into(), cstr.as_ptr())
                     .into_result()
