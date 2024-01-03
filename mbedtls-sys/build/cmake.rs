@@ -17,6 +17,7 @@ impl super::BuildConfig {
         ))
         .define("ENABLE_PROGRAMS", "OFF")
         .define("ENABLE_TESTING", "OFF")
+        .define("MBEDTLS_FATAL_WARNINGS", "OFF")
         .build_target("lib");
         for cflag in &self.cflags {
             cmk.cflag(cflag);
