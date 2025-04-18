@@ -14,7 +14,7 @@ use genio::{Read, Write};
 #[cfg(feature = "std")]
 use std::sync::Arc;
 
-use mbedtls_sys::types::raw_types::{c_int, c_uchar, c_void};
+use mbedtls_sys::types::raw_types::{c_int, c_char, c_uchar, c_void};
 use mbedtls_sys::types::size_t;
 use mbedtls_sys::*;
 
@@ -149,7 +149,7 @@ impl Context {
         if let Some(s) = hostname {
             let cstr = alloc::ffi::CString::new(s).map_err(|_| Error::SslBadInputData)?;
             unsafe {
-                ssl_set_hostname(self.into(), cstr.as_ptr())
+                ssl_set_hostname(self.into(), cstr.as_ptr() as *const c_char)
                     .into_result()
                     .map(|_| ())
             }
